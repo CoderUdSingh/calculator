@@ -1,27 +1,29 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { evaluate as mathEvaluate } from "mathjs";
 
 const Calculator = () => {
   const [val, setVal] = useState("");
   const [op, setOp] = useState("");
   const operators = new Set(["+", "-", "/", "*"]);
 
-  //Fucntion to evaluate the expression
-  const evaluate = (expr) => new Function(`return ${expr}`)();
+  // Function to evaluate
+  const evaluate = (expr) => {
+    return mathEvaluate(expr);
+  };
 
   const backspace = () => {
     setVal(val.slice(0, -1));
   };
   const handleButton = (e) => {
     //To handle situation if the first digit is negative
-    if (val == "" && e.target.value == "-" && op == "") {
+    if (val === "" && e.target.value === "-" && op === "") {
       setVal(val + e.target.value);
-      console.log("minus wali ");
       setOp("filled");
       return;
     }
     //Handling situation where last character is an operator (stop accumulating operators at the end of string)
     else if (
-      val != "" &&
+      val !== "" &&
       operators.has(e.target.value) &&
       operators.has(val[val.length - 1])
     ) {
@@ -29,7 +31,6 @@ const Calculator = () => {
       setVal(newVal + e.target.value);
       return;
     } else {
-      console.log("else condition is working");
       setOp("");
       setVal(val + e.target.value);
       return;
